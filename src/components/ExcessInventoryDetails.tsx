@@ -1,7 +1,11 @@
 import { excessInventoryRows } from '../mockData'
 import { formatCurrency, formatNumber } from './detailsHelpers'
+import { AiInsightsCard } from './AiInsightsCard'
+import { computeAiExcessInsights } from '../ai/aiLogic'
 
 export function ExcessInventoryDetails() {
+  const aiInsights = computeAiExcessInsights()
+
   const totalExcessValue = excessInventoryRows.reduce(
     (sum, row) => sum + row.excessValue,
     0,
@@ -13,7 +17,19 @@ export function ExcessInventoryDetails() {
   return (
     <div>
       <h2>Excess</h2>
-      <h3 className="panel-title">Excess Inventory</h3>
+      <h3 className="panel-title">AI Excess Inventory Optimization</h3>
+
+      <div className="details-grid">
+        <div className="helper-text" style={{ marginTop: 0 }}>
+          AI flags high-cover / high-value pockets to tune targets and release working capital.
+        </div>
+        <AiInsightsCard
+          title={aiInsights.title}
+          subtitle={aiInsights.subtitle}
+          bullets={aiInsights.bullets}
+        />
+      </div>
+
       <div className="kpi-strip">
         <div className="kpi-tile">
           <span>Total Excess Value</span>

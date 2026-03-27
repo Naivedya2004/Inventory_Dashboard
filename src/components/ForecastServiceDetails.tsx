@@ -1,11 +1,54 @@
 import { forecastAccuracyRows, serviceImpactRows } from '../mockData'
 import { formatNumber } from './detailsHelpers'
+import { AiInsightsCard } from './AiInsightsCard'
+import {
+  computeAiForecastServiceInsights,
+  getAiForecastSummary,
+  rankSkusByForecastImpact,
+} from '../ai/aiLogic'
 
 export function ForecastServiceDetails() {
+  const aiInsights = computeAiForecastServiceInsights()
+  const aiSummary = getAiForecastSummary(forecastAccuracyRows)
+  const impactSkus = rankSkusByForecastImpact(forecastAccuracyRows, serviceImpactRows)
+
   return (
     <div>
       <h2>Forecast</h2>
-      <h3 className="panel-title">Forecast & Service</h3>
+      <h3 className="panel-title">AI-Powered Forecast & Service</h3>
+
+      <div className="details-grid">
+        <div>
+          <h4 className="section-title">AI Forecast Summary</h4>
+          <div className="kpi-strip">
+            <div className="kpi-tile">
+              <span>Overall Forecast Accuracy</span>
+              <strong>{aiSummary.accuracyPct.toFixed(1)}%</strong>
+            </div>
+            <div className="kpi-tile">
+              <span>Model Confidence</span>
+              <strong>{aiSummary.modelConfidence}</strong>
+            </div>
+          </div>
+
+          <div className="helper-text" style={{ marginTop: 0 }}>
+            Highest-impact SKUs to improve next:
+            <ul className="notes-list" style={{ marginTop: '0.4rem' }}>
+              {impactSkus.map((s) => (
+                <li key={s.sku}>
+                  <strong>{s.sku}</strong> — {s.reason}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <AiInsightsCard
+          title={aiInsights.title}
+          subtitle={aiInsights.subtitle}
+          bullets={aiInsights.bullets}
+        />
+      </div>
 
       <h4 className="section-title">Forecast Accuracy</h4>
       <table className="data-table">

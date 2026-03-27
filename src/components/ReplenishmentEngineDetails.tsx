@@ -1,11 +1,27 @@
 import { replenishmentOrderRows, replenishmentProjectionRows } from '../mockData'
 import { formatNumber, statusClass } from './detailsHelpers'
+import { AiInsightsCard } from './AiInsightsCard'
+import { computeAiReplenishmentInsights, computeAiSafetyStockPolicyHint } from '../ai/aiLogic'
 
 export function ReplenishmentEngineDetails() {
+  const aiInsights = computeAiReplenishmentInsights()
+
   return (
     <div>
       <h2>Replenishment</h2>
-      <h3 className="panel-title">Replenishment Engine</h3>
+      <h3 className="panel-title">AI-Recommended Replenishment Actions</h3>
+
+      <div className="details-grid">
+        <div className="helper-text" style={{ marginTop: 0 }}>
+          AI policy hints translate forecast/service signals into safety-stock guidance per SKU (heuristic now,
+          model-ready later).
+        </div>
+        <AiInsightsCard
+          title={aiInsights.title}
+          subtitle={aiInsights.subtitle}
+          bullets={aiInsights.bullets}
+        />
+      </div>
 
       <h4 className="section-title">Projection</h4>
       <table className="data-table">
@@ -19,6 +35,7 @@ export function ReplenishmentEngineDetails() {
             <th>Net After Lead Time</th>
             <th>Reorder Point</th>
             <th>Flag</th>
+            <th>AI Policy Hint</th>
           </tr>
         </thead>
         <tbody>
@@ -36,6 +53,9 @@ export function ReplenishmentEngineDetails() {
                   {row.belowRopFlag.replace('_', ' ')}
                 </span>
               </td>
+              <td>
+                <span className="ai-hint">{computeAiSafetyStockPolicyHint(row.sku).message}</span>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -49,6 +69,7 @@ export function ReplenishmentEngineDetails() {
             <th>Location</th>
             <th>Suggested Qty</th>
             <th>Priority</th>
+            <th>AI Policy Hint</th>
           </tr>
         </thead>
         <tbody>
@@ -69,6 +90,9 @@ export function ReplenishmentEngineDetails() {
                 >
                   {row.priority}
                 </span>
+              </td>
+              <td>
+                <span className="ai-hint">{computeAiSafetyStockPolicyHint(row.sku).message}</span>
               </td>
             </tr>
           ))}

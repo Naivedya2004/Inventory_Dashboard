@@ -1,7 +1,11 @@
 import { stockoutRiskRows } from '../mockData'
 import { formatCurrency, statusClass } from './detailsHelpers'
+import { AiInsightsCard } from './AiInsightsCard'
+import { computeAiStockoutInsights } from '../ai/aiLogic'
 
 export function StockoutRiskDetails() {
+  const aiInsights = computeAiStockoutInsights()
+
   const totalValueAtRisk = stockoutRiskRows.reduce(
     (sum, row) => sum + row.valueAtRisk,
     0,
@@ -13,7 +17,19 @@ export function StockoutRiskDetails() {
   return (
     <div>
       <h2>Stockout</h2>
-      <h3 className="panel-title">Stockout Risk & Alerts</h3>
+      <h3 className="panel-title">AI Stockout Risk & Alerts</h3>
+
+      <div className="details-grid">
+        <div className="helper-text" style={{ marginTop: 0 }}>
+          AI ranks safety breaches by value-at-risk and suggests where policy changes prevent repeat alerts.
+        </div>
+        <AiInsightsCard
+          title={aiInsights.title}
+          subtitle={aiInsights.subtitle}
+          bullets={aiInsights.bullets}
+        />
+      </div>
+
       <div className="kpi-strip">
         <div className="kpi-tile">
           <span>Total Value at Risk</span>

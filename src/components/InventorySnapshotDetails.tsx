@@ -1,7 +1,11 @@
 import { inventorySnapshotRows } from '../mockData'
 import { coverText, formatCurrency, formatNumber, statusClass } from './detailsHelpers'
+import { AiInsightsCard } from './AiInsightsCard'
+import { computeAiInventorySnapshotInsights } from '../ai/aiLogic'
 
 export function InventorySnapshotDetails() {
+  const aiInsights = computeAiInventorySnapshotInsights()
+
   const totalInventoryValue = inventorySnapshotRows.reduce(
     (sum, row) => sum + row.inventoryValue,
     0,
@@ -13,7 +17,20 @@ export function InventorySnapshotDetails() {
   return (
     <div>
       <h2>Snapshot</h2>
-      <h3 className="panel-title">Inventory Snapshot</h3>
+      <h3 className="panel-title">AI Inventory Snapshot</h3>
+
+      <div className="details-grid">
+        <div className="helper-text" style={{ marginTop: 0 }}>
+          The AI logic layer highlights policy changes (buffers/targets) that reduce excess while protecting
+          service.
+        </div>
+        <AiInsightsCard
+          title={aiInsights.title}
+          subtitle={aiInsights.subtitle}
+          bullets={aiInsights.bullets}
+        />
+      </div>
+
       <div className="kpi-strip">
         <div className="kpi-tile">
           <span>Total Inventory Value</span>

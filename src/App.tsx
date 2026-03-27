@@ -148,6 +148,10 @@ function App() {
           <div className="app-shell">
             <header className="app-header">
               <h1>AI-powered Inventory Management</h1>
+              <p className="app-subtitle">
+                This dashboard uses an AI logic layer to detect excess, stockout risk, and replenishment
+                opportunities, and then suggests optimal policy changes.
+              </p>
             </header>
 
             <section className="main-card-grid">
